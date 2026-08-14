@@ -108,7 +108,18 @@ body{font-family:"Noto Sans KR",sans-serif;background:#fff;color:#222;}
 .assoc-inner{display:flex;align-items:center;gap:0.75rem;}
 .assoc-badge{background:#F5820A;color:#fff;border-radius:50px;padding:6px 14px;font-size:10px;font-weight:700;white-space:nowrap;}
 .assoc-desc{font-size:11px;color:#3A6A8A;line-height:1.7;}
-
+.news{background:#fff;padding:1.75rem 1.25rem;}
+.news-head{text-align:center;margin-bottom:1.25rem;}
+.news-title{font-size:16px;font-weight:700;color:#222;}
+.news-title span{color:#F5820A;}
+.news-sub{font-size:11px;color:#6A8EA8;margin-top:0.3rem;}
+.news-list{display:flex;flex-direction:column;gap:0.6rem;max-width:600px;margin:0 auto;}
+.news-item{display:block;background:#F7FAFD;border:1px solid #E8EEF5;border-radius:12px;padding:0.85rem 1rem;text-decoration:none;transition:0.2s;}
+.news-item:hover{background:#EAF3FC;}
+.news-item-title{font-size:13px;font-weight:600;color:#1A3F5C;line-height:1.5;margin-bottom:0.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.news-item-date{font-size:10px;color:#9AB2C8;}
+.news-more{display:block;text-align:center;margin:1.1rem auto 0;background:#2A7AB8;color:#fff;font-size:12px;font-weight:600;padding:10px 24px;border-radius:50px;text-decoration:none;width:fit-content;}
+.news-loading{text-align:center;font-size:12px;color:#9AB2C8;padding:1rem;}
 .channels{background:#333;padding:1.75rem 1.25rem;text-align:center;}
 .ch-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:0.3rem;}
 .ch-sub{font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:1.25rem;}
@@ -529,7 +540,17 @@ body{font-family:"Noto Sans KR",sans-serif;background:#fff;color:#222;}
     <div class="assoc-desc">아동·청소년 심리상담, 피해자 보호, 범죄예방 프로그램 개발 및 운영</div>
   </div>
 </div>
-
+<!-- 고양e소식 -->
+<div class="news">
+  <div class="news-head">
+    <div class="news-title">고양<span>e</span>소식</div>
+    <div class="news-sub">블로그에서 전하는 상담 이야기</div>
+  </div>
+  <div class="news-list" id="newsList">
+    <div class="news-loading">소식을 불러오는 중…</div>
+  </div>
+  <a href="https://blog.naver.com/goyangecenter" target="_blank" class="news-more">블로그에서 더 보기</a>
+</div>
 <!-- 채널 -->
 <div class="channels">
   <div class="ch-title">고양e 채널</div>
@@ -570,6 +591,26 @@ function goSlide(n){
   dots.forEach((d,i)=>d.classList.toggle("active",i===n));
 }
 setInterval(()=>goSlide((cur+1)%2),5000);
+ // 고양e소식 - 네이버 블로그 자동 불러오기
+(function(){
+  var rss="https://blog.naver.com/goyangecenter.rss";
+  var api="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(rss);
+  fetch(api).then(function(r){return r.json();}).then(function(d){
+    var box=document.getElementById("newsList");
+    if(!d.items||!d.items.length){box.innerHTML="<div class='news-loading'>블로그에서 더 보기를 눌러주세요</div>";return;}
+    box.innerHTML="";
+    d.items.slice(0,3).forEach(function(it){
+      var dt=new Date(it.pubDate);
+      var ds=dt.getFullYear()+"."+(dt.getMonth()+1)+"."+dt.getDate();
+      var a=document.createElement("a");
+      a.href=it.link;a.target="_blank";a.className="news-item";
+      a.innerHTML="<div class='news-item-title'>"+it.title+"</div><div class='news-item-date'>"+ds+"</div>";
+      box.appendChild(a);
+    });
+  }).catch(function(){
+    document.getElementById("newsList").innerHTML="<div class='news-loading'>블로그에서 더 보기를 눌러주세요</div>";
+  });
+})();
 </script>
 </body>
 </html>
