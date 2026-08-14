@@ -591,22 +591,20 @@ function goSlide(n){
   dots.forEach((d,i)=>d.classList.toggle("active",i===n));
 }
 setInterval(()=>goSlide((cur+1)%2),5000);
- // 고양e소식 - 네이버 블로그 자동 불러오기
+<script>
 (function(){
-  var rss="https://blog.naver.com/goyangecenter.rss";
-  var api="https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(rss);
-  fetch(api).then(function(r){return r.json();}).then(function(d){
+  var api="https://naver-rss.k409106k.workers.dev/";
+  fetch(api).then(function(r){return r.json();}).then(function(items){
     var box=document.getElementById("newsList");
-    if(!d.items||!d.items.length){box.innerHTML="<div class='news-loading'>블로그에서 더 보기를 눌러주세요</div>";return;}
-    box.innerHTML="";
-    d.items.slice(0,3).forEach(function(it){
-      var dt=new Date(it.pubDate);
-      var ds=dt.getFullYear()+"."+(dt.getMonth()+1)+"."+dt.getDate();
-      var a=document.createElement("a");
-      a.href=it.link;a.target="_blank";a.className="news-item";
-      a.innerHTML="<div class='news-item-title'>"+it.title+"</div><div class='news-item-date'>"+ds+"</div>";
-      box.appendChild(a);
+    if(!items||!items.length){box.innerHTML="<div class='news-loading'>블로그에서 더 보기를 눌러주세요</div>";return;}
+    var html="";
+    items.forEach(function(it){
+      var link=it.link.replace("<![CDATA[","").replace("]]>","");
+      var d=new Date(it.date);
+      var ymd=d.getFullYear()+"."+(d.getMonth()+1)+"."+d.getDate();
+      html+="<a class='news-card' href='"+link+"' target='_blank'><div class='news-title'>"+it.title+"</div><div class='news-date'>"+ymd+"</div></a>";
     });
+    box.innerHTML=html;
   }).catch(function(){
     document.getElementById("newsList").innerHTML="<div class='news-loading'>블로그에서 더 보기를 눌러주세요</div>";
   });
