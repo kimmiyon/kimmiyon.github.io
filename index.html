@@ -569,7 +569,7 @@ function goSlide(n){
   slides.style.transform="translateX(-"+n+"00%)";
   dots.forEach((d,i)=>d.classList.toggle("active",i===n));
 }
-setInterval(()=>goSlide((cur+1)%2),7000);
+setInterval(()=>goSlide((cur+1)%2),5000);
 </script>
 </body>
 </html>
