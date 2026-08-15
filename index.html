@@ -591,7 +591,7 @@ function goSlide(n){
   dots.forEach((d,i)=>d.classList.toggle("active",i===n));
 }
 setInterval(()=>goSlide((cur+1)%2),5000);
-<script>
+</script>
 (function(){
   var api="https://naver-rss.k409106k.workers.dev/";
   fetch(api).then(function(r){return r.json();}).then(function(items){
