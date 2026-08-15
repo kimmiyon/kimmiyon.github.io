@@ -592,7 +592,8 @@ function goSlide(n){
 }
 setInterval(()=>goSlide((cur+1)%2),5000);
 </script>
-(function(){
+<script>
+ (function(){
   var api="https://naver-rss.k409106k.workers.dev/";
   fetch(api).then(function(r){return r.json();}).then(function(items){
     var box=document.getElementById("newsList");
